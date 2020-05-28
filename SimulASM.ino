@@ -43,7 +43,7 @@ void loop()
 
         auto IMD = 0;
 
-        push_mem((byte(key) - 1) << 3);
+        //push_mem((byte(key) - 1) << 3);
         module.setLEDs(key);
 
         auto aux = get_instruction(key);

@@ -8,25 +8,23 @@ function parse_operand(ref op_code, byte operand)
 {
     auto value = ERROR;
 
-    if (operand | _REG)
+    if ((operand & _REG) && (get_button() == BTN_REG))
     {
         op_code |= byte(1) << 2;
         value = get_reg();
     }
 
-    else if (operand | _MEM)
+    else if ((operand & _MEM) && (get_button() == BTN_MEM))
     {
         op_code |= byte(1) << 1;
         value = get_mem();
     }
 
-    else if (operand | _IMD)
+    else if ((operand & _IMD) && (get_button() == BTN_IMD))
     {
         op_code |= byte(1);
         value = read_value();
     }
-
-    else error();
 
     return value;
 }
@@ -50,17 +48,17 @@ function op_type_2(byte op_code)
     auto first = parse_operand(op_code, _REG | _MEM);
 
     auto second = byte();
-    if (op_code | _MEM)
+    if (op_code & _MEM)
     {
         second = parse_operand(op_code, _REG | _IMD);
-        if (op_code | _REG) op_code |= 1;
+        if (op_code & _REG) op_code |= 1;
     }
-    else if (op_code | _REG)
+    else if (op_code & _REG)
     {
         second = parse_operand(op_code, _REG | _MEM | _IMD);
-        if (op_code | _REG) op_code ^= byte(1 << 2);
+        if (op_code & _REG) op_code ^= byte(1 << 2);
     }
-    else exit_err();
+    //else exit_err();
 
     push_mem(op_code);
     push_mem(first);

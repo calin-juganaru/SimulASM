@@ -74,9 +74,9 @@ constant ERROR = byte(-1);
 
 // ============================================================================
 
-constant _REG = byte(1 << 2);
-constant _MEM = byte(1 << 1);
-constant _IMD = byte(1 << 0);
+constant _REG = byte(B100);
+constant _MEM = byte(B010);
+constant _IMD = byte(B001);
 
 // ============================================================================
 
