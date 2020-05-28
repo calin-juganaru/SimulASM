@@ -105,8 +105,6 @@ enum class Operands
 byte memory[32];
 byte registers[8];
 
-auto segment_text = String("        ");
-
 auto& RA = registers[0];
 auto& RB = registers[1];
 auto& RC = registers[2];
@@ -116,6 +114,8 @@ auto& SR = registers[4];
 auto& BP = registers[5];
 auto& IP = registers[6];
 auto& FR = registers[7];
+
+auto segment_text = String("        ");
 
 // ============================================================================
 
@@ -127,21 +127,6 @@ constant PR = byte(1 << 4);
 constant AO = byte(1 << 5);
 constant SO = byte(1 << 6);
 constant SG = byte(1 << 7);
-
-// ============================================================================
-
-
-constant is_digit = [](const char& c)
-{
-    return ((c >= '0' && c <= '9') || ((c >= 'A' && c <= 'F')));
-};
-
-// ============================================================================
-
-constant is_instruction = [](const char& c)
-{
-    return (c > 0 && c < 32);
-};
 
 // ============================================================================
 

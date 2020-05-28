@@ -10,13 +10,13 @@ function parse_operand(ref op_code, byte operand)
 
     if ((operand & _REG) && (get_button() == BTN_REG))
     {
-        op_code |= byte(1) << 2;
+        op_code |= byte(1 << 2);
         value = get_reg();
     }
 
     else if ((operand & _MEM) && (get_button() == BTN_MEM))
     {
-        op_code |= byte(1) << 1;
+        op_code |= byte(1 << 1);
         value = get_mem();
     }
 
@@ -46,7 +46,14 @@ function op_type_2(byte op_code)
 {
     op_code <<= 3;
     auto first = parse_operand(op_code, _REG | _MEM);
-
+    
+    auto index = 4;
+    for (auto i: String(first))
+        segment_text[index++] = ' ';
+    print_segment();
+    
+    wait_button(BTN_REG | BTN_MEM | BTN_IMD);
+    
     auto second = byte();
     if (op_code & _MEM)
     {
@@ -55,9 +62,13 @@ function op_type_2(byte op_code)
     }
     else if (op_code & _REG)
     {
+        op_code ^= _REG;
         second = parse_operand(op_code, _REG | _MEM | _IMD);
-        if (op_code & _REG) op_code ^= byte(1 << 2);
+        if (op_code & _REG) 
+             op_code ^= _REG;
+        else op_code |= _REG;
     }
+    
     //else exit_err();
 
     push_mem(op_code);

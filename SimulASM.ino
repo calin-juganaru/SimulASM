@@ -30,6 +30,7 @@ void setup()
     lcd_display.print("2020");
 
     RA = 7;
+    SR = -1;
 }
 
 // ============================================================================
@@ -41,9 +42,6 @@ void loop()
         auto key = keypad.getKey();
         if (!key) continue;
 
-        auto IMD = 0;
-
-        //push_mem((byte(key) - 1) << 3);
         module.setLEDs(key);
 
         auto aux = get_instruction(key);
@@ -54,6 +52,8 @@ void loop()
 
         switch (key)
         {
+            parse_op(PSH, push);
+            parse_op(POP, pop);
             parse_op(NOP, nop);
             parse_op(AND, and);
             parse_op(NOT, not);
@@ -66,8 +66,6 @@ void loop()
             parse_op(DEC, dec);
             parse_op(NEG, neg);
             parse_op(MOD, mod);
-            parse_op(PSH, push);
-            parse_op(POP, pop);
             parse_op(SHL, shl);
             parse_op(SHR, shr);
             parse_op(MOV, mov);

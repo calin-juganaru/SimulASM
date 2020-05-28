@@ -9,7 +9,6 @@
 using pointer = byte*;
 using ref = byte&;
 using cref = const ref;
-using cvref = volatile cref;
 
 // ============================================================================
 

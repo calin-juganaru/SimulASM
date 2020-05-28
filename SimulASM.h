@@ -5,31 +5,6 @@
 
 // ============================================================================
 
-void print_key()
-{
-    for (auto&& keypad: cmd_pads)
-    {
-        auto key = keypad.getKey();
-
-        if (is_digit(key))
-        {
-            if (segment_text[4] == ' ')
-                 segment_text[4] = key;
-            else segment_text[6] = key;
-        }
-        else
-        {
-            auto aux = get_instruction(key);
-            for (auto i = 0; i < aux.length(); ++i)
-                segment_text[i] = aux[i];
-        }
-
-        module.setDisplayToString(segment_text.c_str());
-    }
-}
-
-// ============================================================================
-
 inline void set_memory_bit(int row, byte col, boolean value = true)
 {
     mem_display.setLed(row / 8, col, 7 + 8 * (row / 8) - row, value);
