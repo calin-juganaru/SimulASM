@@ -1,6 +1,5 @@
 #pragma once
 
-#include "pair.h"
 #include "instructions.h"
 
 #define DIE(cond) if (cond == ERROR) error()
@@ -8,7 +7,7 @@
 
 using pointer = byte*;
 using ref = byte&;
-using cref = const ref;
+using cref = const byte&;
 
 // ============================================================================
 
@@ -25,7 +24,7 @@ function error()
 
 // ============================================================================
 
-function push_mem(auto value)
+function push_mem(byte value)
 {
     SR = (SR + 1) % 32;
     memory[SR] = value;
@@ -91,13 +90,13 @@ function get_button()
 
 // ============================================================================
 
-constexpr auto wait_button = [](const byte& button)
+function wait_button(cref button)
 {
     auto aux = module.getButtons();
     while (!(aux & button))
         aux = module.getButtons();
     return aux;
-};
+}
 
 // ============================================================================
 

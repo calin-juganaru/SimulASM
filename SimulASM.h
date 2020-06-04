@@ -5,75 +5,29 @@
 
 // ============================================================================
 
-inline void set_memory_bit(int row, byte col, boolean value = true)
+function run_code()
 {
-    mem_display.setLed(row / 8, col, 7 + 8 * (row / 8) - row, value);
-}
+    error(); error();
+    wait_button(ENTER);
+    clear_segment();
 
-// ============================================================================
+    RA = RB = RC = RD = BP = IP = FR = 0;
 
-inline void set_memory_byte(int index)
-{
-    auto value = memory[index];
-    for (auto col = 0; col < 8; ++col, value >>= 1)
-        set_memory_bit(index, col, value % 2);
-}
+    for (auto i = 0; i < 8; ++i)
+        display_register(i);
 
-// ============================================================================
-
-inline void set_register_bit(int row, byte col, boolean value = true)
-{
-    reg_display.setLed(0, 7 - row, col, value);
-}
-
-// ============================================================================
-
-inline void display_register(byte index)
-{
-    auto value = registers[index];
-    for (auto i = 0; i < 8; ++i, value >>= 1)
-        set_register_bit(index, i, value % 2);
-}
-
-// ============================================================================
-
-void fancy_leds()
-{
-    for (auto x = 0; x < 224; ++x)
+    while (true)
     {
-        // --------------------------------------------------------------------
+        auto op_code = pop_mem();
+        execute(op_code);
 
-        digitalWrite(LED_BUILTIN, HIGH);
-        for (auto row = 0; row < 8; ++row)
-            for (auto col = 0; col < 8; ++col)
-                if ((registers[row] + x) & (byte(1) << col))
-                    set_register_bit(row, col);
+        for (auto i = 0; i < 32; ++i)
+            set_memory_byte(i);
 
-        // --------------------------------------------------------------------
+        for (auto i = 0; i < 8; ++i)
+            display_register(i);
 
-        digitalWrite(LED_BUILTIN, LOW);
-        for (auto row = 0; row < 32; ++row)
-            for (auto col = 0; col < 8; ++col)
-                if ((memory[row] + x) & (byte(1) << col))
-                    set_memory_bit(row, col);
-
-        // --------------------------------------------------------------------
-
-        digitalWrite(LED_BUILTIN, HIGH);
-        for (auto row = 0; row < 8; ++row)
-            for (auto col = 0; col < 8; ++col)
-                if ((registers[row] + x) & (byte(1) << col))
-                    set_register_bit(row, col, false);
-
-        // --------------------------------------------------------------------
-
-        digitalWrite(LED_BUILTIN, LOW);
-        for (auto row = 0; row < 32; ++row)
-            for (auto col = 0; col < 8; ++col)
-                if ((memory[row] + x) & (byte(1) << col))
-                    set_memory_bit(row, col, false);
-
-        // --------------------------------------------------------------------
+        wait_button(ENTER);
     }
 }
 

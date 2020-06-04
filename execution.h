@@ -4,6 +4,10 @@
 
 // ============================================================================
 
+#define exec_op(X, Y) case _##X: exec_##Y(types); break
+
+// ============================================================================
+
 function exec_nop(byte op_code)
 {
     push_mem(byte());
@@ -13,40 +17,22 @@ function exec_nop(byte op_code)
 
 function exec_and(byte op_code)
 {
-    if (op_code == _REG_REG)
-    {
-        auto& x = registers[pop_mem()];
-        auto  y = registers[pop_mem()];
-        x &= y;
-    }
+    auto x = pop_mem(), y = pop_mem();
 
-    else if (op_code == _REG_MEM)
-    {
-        auto& x = registers[pop_mem()];
-        auto  y = memory[pop_mem()];
-        x &= y;
-    }
+    if (op_code == REG_REG)
+        registers[x] &= registers[y];
 
-    else if (op_code == _MEM_REG)
-    {
-        auto& x = memory[pop_mem()];
-        auto  y = registers[pop_mem()];
-        x &= y;
-    }
+    else if (op_code == REG_MEM)
+        registers[x] &= memory[y];
 
-    else if (op_code == _REG_IMD)
-    {
-        auto& x = registers[pop_mem()];
-        auto  y = pop_mem();
-        x &= y;
-    }
+    else if (op_code == MEM_REG)
+        memory[x] &= registers[y];
 
-    else if (op_code == _MEM_IMD)
-    {
-        auto& x = memory[pop_mem()];
-        auto  y = pop_mem();
-        x &= y;
-    }
+    else if (op_code == REG_IMD)
+        registers[x] &= y;
+
+    else if (op_code == MEM_IMD)
+        memory[x] &= y;
 
     else exit_err();
 }
@@ -55,35 +41,35 @@ function exec_and(byte op_code)
 
 function exec_or(byte op_code)
 {
-    if (op_code == _REG_REG)
+    if (op_code == REG_REG)
     {
         auto& x = registers[pop_mem()];
         auto  y = registers[pop_mem()];
         x |= y;
     }
 
-    else if (op_code == _REG_MEM)
+    else if (op_code == REG_MEM)
     {
         auto& x = registers[pop_mem()];
         auto  y = memory[pop_mem()];
         x |= y;
     }
 
-    else if (op_code == _MEM_REG)
+    else if (op_code == MEM_REG)
     {
         auto& x = memory[pop_mem()];
         auto  y = registers[pop_mem()];
         x |= y;
     }
 
-    else if (op_code == _REG_IMD)
+    else if (op_code == REG_IMD)
     {
         auto& x = registers[pop_mem()];
         auto  y = pop_mem();
         x |= y;
     }
 
-    else if (op_code == _MEM_IMD)
+    else if (op_code == MEM_IMD)
     {
         auto& x = memory[pop_mem()];
         auto  y = pop_mem();
@@ -97,13 +83,13 @@ function exec_or(byte op_code)
 
 function exec_not(byte op_code)
 {
-    if (op_code == _REG)
+    if (op_code == REG)
     {
         auto& x = registers[pop_mem()];
         x = ~x;
     }
 
-    else if (op_code == _MEM)
+    else if (op_code == MEM)
     {
         auto& x = memory[pop_mem()];
         x = ~x;
@@ -116,35 +102,35 @@ function exec_not(byte op_code)
 
 function exec_xor(byte op_code)
 {
-    if (op_code == _REG_REG)
+    if (op_code == REG_REG)
     {
         auto& x = registers[pop_mem()];
         auto  y = registers[pop_mem()];
         x ^= y;
     }
 
-    else if (op_code == _REG_MEM)
+    else if (op_code == REG_MEM)
     {
         auto& x = registers[pop_mem()];
         auto  y = memory[pop_mem()];
         x ^= y;
     }
 
-    else if (op_code == _MEM_REG)
+    else if (op_code == MEM_REG)
     {
         auto& x = memory[pop_mem()];
         auto  y = registers[pop_mem()];
         x ^= y;
     }
 
-    else if (op_code == _REG_IMD)
+    else if (op_code == REG_IMD)
     {
         auto& x = registers[pop_mem()];
         auto  y = pop_mem();
         x ^= y;
     }
 
-    else if (op_code == _MEM_IMD)
+    else if (op_code == MEM_IMD)
     {
         auto& x = memory[pop_mem()];
         auto  y = pop_mem();
@@ -158,35 +144,35 @@ function exec_xor(byte op_code)
 
 function exec_add(byte op_code)
 {
-    if (op_code == _REG_REG)
+    if (op_code == REG_REG)
     {
         auto& x = registers[pop_mem()];
         auto  y = registers[pop_mem()];
         x += y;
     }
 
-    else if (op_code == _REG_MEM)
+    else if (op_code == REG_MEM)
     {
         auto& x = registers[pop_mem()];
         auto  y = memory[pop_mem()];
         x += y;
     }
 
-    else if (op_code == _MEM_REG)
+    else if (op_code == MEM_REG)
     {
         auto& x = memory[pop_mem()];
         auto  y = registers[pop_mem()];
         x += y;
     }
 
-    else if (op_code == _REG_IMD)
+    else if (op_code == REG_IMD)
     {
         auto& x = registers[pop_mem()];
         auto  y = pop_mem();
         x += y;
     }
 
-    else if (op_code == _MEM_IMD)
+    else if (op_code == MEM_IMD)
     {
         auto& x = memory[pop_mem()];
         auto  y = pop_mem();
@@ -200,35 +186,35 @@ function exec_add(byte op_code)
 
 function exec_sub(byte op_code)
 {
-    if (op_code == _REG_REG)
+    if (op_code == REG_REG)
     {
         auto& x = registers[pop_mem()];
         auto  y = registers[pop_mem()];
         x -= y;
     }
 
-    else if (op_code == _REG_MEM)
+    else if (op_code == REG_MEM)
     {
         auto& x = registers[pop_mem()];
         auto  y = memory[pop_mem()];
         x -= y;
     }
 
-    else if (op_code == _MEM_REG)
+    else if (op_code == MEM_REG)
     {
         auto& x = memory[pop_mem()];
         auto  y = registers[pop_mem()];
         x -= y;
     }
 
-    else if (op_code == _REG_IMD)
+    else if (op_code == REG_IMD)
     {
         auto& x = registers[pop_mem()];
         auto  y = pop_mem();
         x -= y;
     }
 
-    else if (op_code == _MEM_IMD)
+    else if (op_code == MEM_IMD)
     {
         auto& x = memory[pop_mem()];
         auto  y = pop_mem();
@@ -242,13 +228,13 @@ function exec_sub(byte op_code)
 
 function exec_inc(byte op_code)
 {
-    if (op_code == _REG)
+    if (op_code == REG)
     {
         auto& x = registers[pop_mem()];
         x = x + 1;
     }
 
-    else if (op_code == _MEM)
+    else if (op_code == MEM)
     {
         auto& x = memory[pop_mem()];
         x = x + 1;
@@ -261,13 +247,13 @@ function exec_inc(byte op_code)
 
 function exec_dec(byte op_code)
 {
-    if (op_code == _REG)
+    if (op_code == REG)
     {
         auto& x = registers[pop_mem()];
         x = x - 1;
     }
 
-    else if (op_code == _MEM)
+    else if (op_code == MEM)
     {
         auto& x = memory[pop_mem()];
         x = x - 1;
@@ -280,13 +266,13 @@ function exec_dec(byte op_code)
 
 function exec_neg(byte op_code)
 {
-    if (op_code == _REG)
+    if (op_code == REG)
     {
         auto& x = registers[pop_mem()];
         x = -x;
     }
 
-    else if (op_code == _MEM)
+    else if (op_code == MEM)
     {
         auto& x = memory[pop_mem()];
         x = -x;
@@ -299,35 +285,35 @@ function exec_neg(byte op_code)
 
 function exec_shl(byte op_code)
 {
-    if (op_code == _REG_REG)
+    if (op_code == REG_REG)
     {
         auto& x = registers[pop_mem()];
         auto  y = registers[pop_mem()];
         x <<= y;
     }
 
-    else if (op_code == _REG_MEM)
+    else if (op_code == REG_MEM)
     {
         auto& x = registers[pop_mem()];
         auto  y = memory[pop_mem()];
         x <<= y;
     }
 
-    else if (op_code == _MEM_REG)
+    else if (op_code == MEM_REG)
     {
         auto& x = memory[pop_mem()];
         auto  y = registers[pop_mem()];
         x <<= y;
     }
 
-    else if (op_code == _REG_IMD)
+    else if (op_code == REG_IMD)
     {
         auto& x = registers[pop_mem()];
         auto  y = pop_mem();
         x <<= y;
     }
 
-    else if (op_code == _MEM_IMD)
+    else if (op_code == MEM_IMD)
     {
         auto& x = memory[pop_mem()];
         auto  y = pop_mem();
@@ -341,35 +327,35 @@ function exec_shl(byte op_code)
 
 function exec_shr(byte op_code)
 {
-    if (op_code == _REG_REG)
+    if (op_code == REG_REG)
     {
         auto& x = registers[pop_mem()];
         auto  y = registers[pop_mem()];
         x >>= y;
     }
 
-    else if (op_code == _REG_MEM)
+    else if (op_code == REG_MEM)
     {
         auto& x = registers[pop_mem()];
         auto  y = memory[pop_mem()];
         x >>= y;
     }
 
-    else if (op_code == _MEM_REG)
+    else if (op_code == MEM_REG)
     {
         auto& x = memory[pop_mem()];
         auto  y = registers[pop_mem()];
         x >>= y;
     }
 
-    else if (op_code == _REG_IMD)
+    else if (op_code == REG_IMD)
     {
         auto& x = registers[pop_mem()];
         auto  y = pop_mem();
         x >>= y;
     }
 
-    else if (op_code == _MEM_IMD)
+    else if (op_code == MEM_IMD)
     {
         auto& x = memory[pop_mem()];
         auto  y = pop_mem();
@@ -383,35 +369,35 @@ function exec_shr(byte op_code)
 
 function exec_mov(byte op_code)
 {
-    if (op_code == _REG_REG)
+    if (op_code == REG_REG)
     {
         auto& x = registers[pop_mem()];
         auto  y = registers[pop_mem()];
         x = y;
     }
 
-    else if (op_code == _REG_MEM)
+    else if (op_code == REG_MEM)
     {
         auto& x = registers[pop_mem()];
         auto  y = memory[pop_mem()];
         x = y;
     }
 
-    else if (op_code == _MEM_REG)
+    else if (op_code == MEM_REG)
     {
         auto& x = memory[pop_mem()];
         auto  y = registers[pop_mem()];
         x = y;
     }
 
-    else if (op_code == _REG_IMD)
+    else if (op_code == REG_IMD)
     {
         auto& x = registers[pop_mem()];
         auto  y = pop_mem();
         x = y;
     }
 
-    else if (op_code == _MEM_IMD)
+    else if (op_code == MEM_IMD)
     {
         auto& x = memory[pop_mem()];
         auto  y = pop_mem();
@@ -425,42 +411,45 @@ function exec_mov(byte op_code)
 
 function exec_push(byte op_code)
 {
-    if (op_code | _REG)
+    if (op_code == REG)
     {
         auto index = pop_mem();
         push_mem(registers[index]);
     }
 
-    else if (op_code | _MEM)
+    else if (op_code == MEM)
     {
         auto index = pop_mem();
         push_mem(memory[index]);
     }
 
-    else if (op_code | _IMD)
+    else if (op_code == IMD)
     {
         auto value = pop_mem();
         push_mem(value);
     }
+
+    else exit_err();
 }
 
 // ============================================================================
 
 function exec_pop(byte op_code)
 {
-    auto value = pop_mem();
+    auto value = pop_stack();
+    auto index = pop_mem();
 
-    if (op_code | _REG)
+    if (op_code == REG)
     {
-        auto index = pop_mem();
-        push_mem(registers[index]);
+        registers[index] = value;
     }
 
-    else if (op_code | _MEM)
+    else if (op_code == MEM)
     {
-        auto index = pop_mem();
-        push_mem(memory[index]);
+        memory[index] = value;
     }
+
+    else exit_err();
 }
 
 // ============================================================================
@@ -469,44 +458,44 @@ function compare(cref x, cref y)
 {
     auto diff = x - y;
 
-    FR = (diff == 0) ? FR | ZR : FR & ~ZR;
-    FR = (diff > 0) ? FR | GR : FR & ~GR;
-    FR = (diff < 0) ? FR | LS : FR & ~LS;
+    bitWrite(FR, ZR, (diff == 0));
+    bitWrite(FR, GR, (diff > 0));
+    bitWrite(FR, LS, (diff < 0));
 }
 
 // ============================================================================
 
 function exec_cmp(byte op_code)
 {
-    if (op_code == _REG_REG)
+    if (op_code == REG_REG)
     {
         auto x = registers[pop_mem()];
         auto y = registers[pop_mem()];
         compare(x, y);
     }
 
-    else if (op_code == _REG_MEM)
+    else if (op_code == REG_MEM)
     {
         auto x = registers[pop_mem()];
         auto y = memory[pop_mem()];
         compare(x, y);
     }
 
-    else if (op_code == _MEM_REG)
+    else if (op_code == MEM_REG)
     {
         auto x = memory[pop_mem()];
         auto y = registers[pop_mem()];
         compare(x, y);
     }
 
-    else if (op_code == _REG_IMD)
+    else if (op_code == REG_IMD)
     {
         auto x = registers[pop_mem()];
         auto y = pop_mem();
         compare(x, y);
     }
 
-    else if (op_code == _MEM_IMD)
+    else if (op_code == MEM_IMD)
     {
         auto x = memory[pop_mem()];
         auto y = pop_mem();
@@ -520,13 +509,13 @@ function exec_cmp(byte op_code)
 
 function exec_jmp(byte op_code)
 {
-    if (op_code == _REG)
+    if (op_code == REG)
         IP = registers[pop_mem()];
 
-    else if (op_code == _MEM)
+    else if (op_code == MEM)
         IP = memory[pop_mem()];
 
-    else if (op_code == _IMD)
+    else if (op_code == IMD)
         IP = pop_mem();
 
     else exit_err();
@@ -536,70 +525,70 @@ function exec_jmp(byte op_code)
 
 function exec_jne(byte op_code)
 {
-    if (!(FR & ZR)) exec_jmp(op_code);
+    if (!bitRead(FR, ZR)) exec_jmp(op_code);
 }
 
 // ============================================================================
 
 function exec_jle(byte op_code)
 {
-    if ((FR & ZR) || (FR & LS)) exec_jmp(op_code);
+    if (bitRead(FR, ZR) || bitRead(FR, LS)) exec_jmp(op_code);
 }
 
 // ============================================================================
 
 function exec_jge(byte op_code)
 {
-    if ((FR & ZR) || (FR & GR)) exec_jmp(op_code);
+    if (bitRead(FR, ZR) || bitRead(FR, GR)) exec_jmp(op_code);
 }
 
 // ============================================================================
 
 function exec_je(byte op_code)
 {
-    if (FR & ZR) exec_jmp(op_code);
+    if (bitRead(FR, ZR)) exec_jmp(op_code);
 }
 
 // ============================================================================
 
 function exec_jl(byte op_code)
 {
-    if (FR & LS) exec_jmp(op_code);
+    if (bitRead(FR, LS)) exec_jmp(op_code);
 }
 
 // ============================================================================
 
 function exec_jg(byte op_code)
 {
-    if (FR & GR) exec_jmp(op_code);
+    if (bitRead(FR, GR)) exec_jmp(op_code);
 }
 
 // ============================================================================
 
 function exec_jc(byte op_code)
 {
-    if (FR & CR) exec_jmp(op_code);
+    if (bitRead(FR, CR)) exec_jmp(op_code);
 }
 
 // ============================================================================
 
 function exec_jo(byte op_code)
 {
-    if (FR & AO) exec_jmp(op_code);
+    if (bitRead(FR, AO)) exec_jmp(op_code);
 }
 
 // ============================================================================
 
 function exec_js(byte op_code)
 {
-    if (FR & SG) exec_jmp(op_code);
+    if (bitRead(FR, SG)) exec_jmp(op_code);
 }
 
 // ============================================================================
 
 function exec_jz(byte op_code)
 {
-    if (FR & ZR) exec_jmp(op_code); // ! ! ! ! ! ! ! !! ! !! ! !!  ! ! ! ! ! !
+    if (bitRead(FR, ZR)) exec_jmp(op_code);
 }
 
 // ============================================================================
@@ -645,14 +634,6 @@ function execute(byte op_code)
 
         default: exit_err();
     }
-}
-
-// ============================================================================
-
-function run()
-{
-    RA = RB = RC = RD = 0;
-    SR = BP = IP = FR = 0;
 }
 
 // ============================================================================

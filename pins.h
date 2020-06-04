@@ -7,24 +7,33 @@
 
 // ============================================================================
 
-constexpr auto MEM_DATA_IN = 48;
-constexpr auto MEM_LOAD    = 46;
-constexpr auto MEM_CLOCK   = 44;
+#define function static inline auto
+#define constant constexpr auto
 
-constexpr auto REG_DATA_IN = 23;
-constexpr auto REG_LOAD    = 52;
-constexpr auto REG_CLOCK   = 50;
+// ============================================================================
 
-constexpr auto TM1638_DATA   = 2;
-constexpr auto TM1638_CLOCK  = 3;
-constexpr auto TM1638_STROBE = 4;
+constant MEM_DATA_IN = 48;
+constant MEM_LOAD    = 46;
+constant MEM_CLOCK   = 44;
+
+constant REG_DATA_IN = 23;
+constant REG_LOAD    = 52;
+constant REG_CLOCK   = 50;
+
+constant TM1638_DATA   = 2;
+constant TM1638_CLOCK  = 3;
+constant TM1638_STROBE = 4;
+
+constant I2C_ADDR = 0x3F;
+constant LCD_ROWS = 20;
+constant LCD_COLS = 4;
 
 // ============================================================================
 
 auto mem_display = LedControl(MEM_DATA_IN, MEM_CLOCK, MEM_LOAD, 4);
 auto reg_display = LedControl(REG_DATA_IN, REG_CLOCK, REG_LOAD, 1);
+auto lcd_display = LiquidCrystal_I2C(I2C_ADDR, LCD_ROWS, LCD_COLS);
 auto module = TM1638(TM1638_DATA, TM1638_CLOCK, TM1638_STROBE);
-auto lcd_display = LiquidCrystal_I2C(0x3F,20,4);
 
 // ============================================================================
 

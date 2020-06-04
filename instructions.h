@@ -4,18 +4,6 @@
 
 // ============================================================================
 
-//#undef DEC
-
-#define function static inline auto
-#define constant constexpr auto
-#define var auto
-
-#define parse_op(X, Y) case _##X: parse_##Y(); break
-#define exec_op(X, Y) case _##X: exec_##Y(types); break
-#define break_if(cond) if (cond) break
-
-// ============================================================================
-
 constant _AND = 1;
 constant _OR  = 2;
 constant _NOT = 3;
@@ -38,24 +26,23 @@ constant _SHR = 16;
 
 constant _MOV = 17;
 constant _LBL = 18;
-constant _RET = 19;
-constant _CMP = 20;
+constant _NOP = 19;
+constant _RET = 20;
 
-constant _JMP = 21;
-constant _JE  = 22;
-constant _JNE = 23;
-constant _JL  = 24;
+constant _CMP = 21;
+constant _JMP = 22;
+constant _JE  = 23;
+constant _JNE = 24;
 
-constant _JLE = 25;
-constant _JG  = 26;
-constant _JGE = 27;
-constant _JC  = 28;
+constant _JL  = 25;
+constant _JLE = 26;
+constant _JG  = 27;
+constant _JGE = 28;
 
-constant _JO  = 29;
-constant _JS  = 30;
-constant _JZ  = 31;
-
-constant _NOP = 0;
+constant _JC  = 29;
+constant _JO  = 30;
+constant _JS  = 31;
+constant _JZ  = 32;
 
 // ============================================================================
 
@@ -74,67 +61,66 @@ constant ERROR = byte(-1);
 
 // ============================================================================
 
-constant _REG = byte(B100);
-constant _MEM = byte(B010);
-constant _IMD = byte(B001);
+constant REG = byte(B100);
+constant MEM = byte(B010);
+constant IMD = byte(B001);
+
+constant REG_REG = byte(B000);
+constant MEM_IMD = byte(B011);
+constant REG_IMD = byte(B101);
+constant REG_MEM = byte(B110);
+constant MEM_REG = byte(B111);
 
 // ============================================================================
 
-constant _REG_REG = byte(B000);
-constant _MEM_IMD = byte(B011);
-constant _REG_IMD = byte(B101);
-constant _REG_MEM = byte(B110);
-constant _MEM_REG = byte(B111);
+byte memory[32], registers[8];
 
-// ============================================================================
+constexpr byte bits[] = {0, 1, 2, 3, 4, 5, 6, 7};
 
-enum class Operands
-{
-    REG_REG = B000,
-    IMD     = B001,
-    MEM     = B010,
-    MEM_IMD = B011,
-    REG     = B100,
-    REG_IMD = B101,
-    REG_MEM = B110,
-    MEM_REG = B111
-};
-
-// ============================================================================
-
-byte memory[32];
-byte registers[8];
-
-auto& RA = registers[0];
-auto& RB = registers[1];
-auto& RC = registers[2];
-auto& RD = registers[3];
-
-auto& SR = registers[4];
-auto& BP = registers[5];
-auto& IP = registers[6];
-auto& FR = registers[7];
+auto& [ZR, LS, GR, CR, PR, AO, SO, SG] = bits;
+auto& [RA, RB, RC, RD, SR, BP, IP, FR] = registers;
 
 auto segment_text = String("        ");
 
 // ============================================================================
 
-constant ZR = byte(1 << 0);
-constant LS = byte(1 << 1);
-constant GR = byte(1 << 2);
-constant CR = byte(1 << 3);
-constant PR = byte(1 << 4);
-constant AO = byte(1 << 5);
-constant SO = byte(1 << 6);
-constant SG = byte(1 << 7);
-
-// ============================================================================
-
-constant get_instruction = [](const char& c)
+function get_instruction(const char& c)
 {
     if (c < 0 || c > 'F')
         return String("Err0r");
     return instructions[c];
-};
+}
+
+// ============================================================================
+
+function set_memory_bit(int row, byte col, boolean value = true)
+{
+    mem_display.setLed(row / 8, col, 7 + 8 * (row / 8) - row, value);
+}
+
+// ============================================================================
+
+function set_memory_byte(int index)
+{
+    auto value = memory[index];
+    for (auto col = 0; col < 8; ++col, value >>= 1)
+        set_memory_bit(index, col, value % 2);
+}
+
+// ============================================================================
+
+function set_register_bit(int row, byte col, boolean value = true)
+{
+    reg_display.setLed(0, 7 - row, col, value);
+}
+
+// ============================================================================
+
+function display_register(byte index)
+{
+    auto value = registers[index];
+    for (auto i = 0; i < 8; ++i, value >>= 1)
+        set_register_bit(index, i, value % 2);
+}
 
 // ============================================================================

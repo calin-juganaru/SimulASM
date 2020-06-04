@@ -29,7 +29,6 @@ void setup()
     lcd_display.setCursor(16, 3);
     lcd_display.print("2020");
 
-    RA = 7;
     SR = -1;
 }
 
@@ -52,6 +51,8 @@ void loop()
 
         switch (key)
         {
+            case _RET: run_code();
+
             parse_op(PSH, push);
             parse_op(POP, pop);
             parse_op(NOP, nop);
@@ -70,7 +71,7 @@ void loop()
             parse_op(SHR, shr);
             parse_op(MOV, mov);
             parse_op(LBL, lbl);
-            parse_op(RET, ret);
+            //parse_op(RET, ret);
             parse_op(CMP, cmp);
             parse_op(JMP, jmp);
             parse_op(JNE, jne);
@@ -85,11 +86,13 @@ void loop()
             parse_op(JZ, jz);
             parse_op(OR, or);
 
+            /*
             default:
             {
                 wait_button(ENTER);
                 break;
             }
+            */
         }
 
         clear_segment();
