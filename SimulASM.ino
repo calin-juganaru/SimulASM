@@ -22,12 +22,12 @@ void setup()
     module.setupDisplay(true, 0);
     wait_button(ENTER);
 
-    lcd_display.init();
-    lcd_display.backlight();
-    lcd_display.setCursor(6, 1);
-    lcd_display.print("SimulASM");
-    lcd_display.setCursor(16, 3);
-    lcd_display.print("2020");
+    lcd_i2c.init();
+    lcd_i2c.backlight();
+    lcd_i2c.setCursor(6, 1);
+    lcd_i2c.print("SimulASM");
+    lcd_i2c.setCursor(16, 3);
+    lcd_i2c.print("2020");
 
     SR = -1;
 }
@@ -98,11 +98,8 @@ void loop()
         clear_segment();
     }
 
-    for (auto i = 0; i < 32; ++i)
-        set_memory_byte(i);
-
-    for (auto i = 0; i < 8; ++i)
-        display_register(i);
+    call(set_memory_byte, 32);
+    call(display_register, 8);
 }
 
 // ============================================================================

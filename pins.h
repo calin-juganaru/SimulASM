@@ -5,10 +5,7 @@
 #include <LedControl.h>
 #include <LiquidCrystal_I2C.h>
 
-// ============================================================================
-
-#define function static inline auto
-#define constant constexpr auto
+#include "utilities.h"
 
 // ============================================================================
 
@@ -32,7 +29,7 @@ constant LCD_COLS = 4;
 
 auto mem_display = LedControl(MEM_DATA_IN, MEM_CLOCK, MEM_LOAD, 4);
 auto reg_display = LedControl(REG_DATA_IN, REG_CLOCK, REG_LOAD, 1);
-auto lcd_display = LiquidCrystal_I2C(I2C_ADDR, LCD_ROWS, LCD_COLS);
+auto lcd_i2c = LiquidCrystal_I2C(I2C_ADDR, LCD_ROWS, LCD_COLS);
 auto module = TM1638(TM1638_DATA, TM1638_CLOCK, TM1638_STROBE);
 
 // ============================================================================
@@ -78,28 +75,5 @@ Keypad cmd_pads[] =
 };
 
 auto numpad = Keypad(makeKeymap(keys[0]), ROW_PIN[2], COL_PIN[2], 4, 4);
-
-// ============================================================================
-
-const String instructions[] =
-{
-    "",
-
-    "AND", "OR ", "NOT", "XOR",
-    "ADD", "SUB", "MUL", "DIV",
-    "INC", "DEC", "NEG", "MOD",
-    "PSH", "POP", "SHL", "SHR",
-
-    "MOV", "LBL", "NOP", "RET",
-    "CMP", "JMP", "JE ", "JNE",
-    "JL ", "JLE", "JG ", "JGE",
-    "JC ", "JO ", "JS ", "JZ "
-};
-
-const String buttons[] =
-{
-    "BIN", "OCT", "DEC", "HEX",
-    "REG", "MEM", "IMD", "ENT"
-};
 
 // ============================================================================
