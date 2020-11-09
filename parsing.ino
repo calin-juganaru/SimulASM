@@ -30,7 +30,7 @@ function byte parse_operand(ref op_code, byte operand)
 
 // ============================================================================
 
-function void parse_op1(byte op_code, byte operand)
+inline void parse_op1(byte op_code, byte operand)
 {
     op_code <<= 3;
     auto value = parse_operand(op_code, operand);
@@ -41,7 +41,7 @@ function void parse_op1(byte op_code, byte operand)
 
 // ============================================================================
 
-function void parse_op2(byte op_code)
+inline void parse_op2(byte op_code)
 {
     op_code <<= 3;
     auto first = parse_operand(op_code, REG | MEM);

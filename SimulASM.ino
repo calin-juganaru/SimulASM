@@ -53,7 +53,7 @@ void loop()
         {
             case _RET: run_code();
 
-            parse_op(PSH, push);
+            parse_op(PSH, psh);
             parse_op(POP, pop);
             parse_op(NOP, nop);
             parse_op(AND, and);

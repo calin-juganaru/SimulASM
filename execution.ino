@@ -94,7 +94,7 @@ byte wait_button(cref button)
 
 // ============================================================================
 
-byte read_value(byte base = 10)
+byte read_value(byte base)
 {
     auto value = byte();
 
@@ -151,7 +151,7 @@ String get_instruction(const char& c)
 
 // ================================================================================================
 
-void set_memory_bit(int row, byte col, boolean value = true)
+void set_memory_bit(int row, byte col, boolean value)
 {
     mem_display.setLed(row / 8, col, 7 + 8 * (row / 8) - row, value);
 }
@@ -167,7 +167,7 @@ void set_memory_byte(int index)
 
 // ================================================================================================
 
-void set_register_bit(int row, byte col, boolean value = true)
+void set_register_bit(int row, byte col, boolean value)
 {
     reg_display.setLed(0, 7 - row, col, value);
 }

@@ -47,8 +47,20 @@ byte _jz(_params);
 
 // ============================================================================
 
+template <typename Op>
+byte alu_op1(_params, Op&& op);
+
+template <typename Op>
+byte alu_op2(_params, Op&& op);
+
+#define _alu_op1(op) return alu_op1(op_code, [](ref x) { return x = op x; })
+#define _alu_op2(op) return alu_op2(op_code, [](ref x, cref y) { return x = x op y; })
+#define cond_jmp(FLAG) (bitRead(FLAGS, FLAG)) ? _jmp(op_code) : byte()
+
+// ============================================================================
+
 void set_flags(byte result);
 byte compare(byte x, byte y);
-byte execute(_params);
+void execute(_params);
 
 // ============================================================================
