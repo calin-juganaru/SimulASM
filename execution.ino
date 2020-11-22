@@ -24,7 +24,7 @@ inline byte push_mem(byte value)
 
 // ============================================================================
 
-byte pop_mem()
+inline byte pop_mem()
 {
     auto value = memory[IP];
     if (IP == 31) bitSet(FLAGS, SO);
@@ -34,7 +34,7 @@ byte pop_mem()
 
 // ============================================================================
 
-byte pop_stack()
+inline byte pop_stack()
 {
     auto value = memory[SR];
     if (SR == 0) bitSet(FLAGS, SO);
@@ -44,7 +44,7 @@ byte pop_stack()
 
 // ============================================================================
 
-void print_segment()
+inline void print_segment()
 {
     module.setDisplayToString(segment_text.c_str());
 }
@@ -59,7 +59,7 @@ inline void clear_segment()
 
 // ============================================================================
 
-byte get_key()
+inline byte get_key()
 {
     auto aux = 0;
     while (!aux)
@@ -69,7 +69,7 @@ byte get_key()
 
 // ============================================================================
 
-byte get_button()
+inline byte get_button()
 {
     auto aux = byte();
     while (!aux)
@@ -84,7 +84,7 @@ byte get_button()
 
 // ============================================================================
 
-byte wait_button(cref button)
+inline byte wait_button(cref button)
 {
     auto aux = module.getButtons();
     while (!(aux & button))
@@ -94,7 +94,7 @@ byte wait_button(cref button)
 
 // ============================================================================
 
-byte read_value(byte base)
+inline byte read_value(byte base)
 {
     auto value = byte();
 
@@ -114,7 +114,7 @@ byte read_value(byte base)
 
 // ============================================================================
 
-byte get_reg()
+inline byte get_reg()
 {
     auto index = read_value();
     while (index > 3)
@@ -128,7 +128,7 @@ byte get_reg()
 
 // ============================================================================
 
-byte get_mem()
+inline byte get_mem()
 {
     auto index = read_value();
     while (index > 31)
@@ -142,7 +142,7 @@ byte get_mem()
 
 // ============================================================================
 
-String get_instruction(const char& c)
+inline String get_instruction(const char& c)
 {
     if (c < 0 || c > 'F')
         return String("Err0r");
@@ -151,14 +151,14 @@ String get_instruction(const char& c)
 
 // ================================================================================================
 
-void set_memory_bit(int row, byte col, boolean value)
+inline void set_memory_bit(int row, byte col, boolean value)
 {
     mem_display.setLed(row / 8, col, 7 + 8 * (row / 8) - row, value);
 }
 
 // ================================================================================================
 
-void set_memory_byte(int index)
+inline void set_memory_byte(int index)
 {
     auto value = memory[index];
     for (auto col = 0; col < 8; ++col, value >>= 1)
@@ -167,14 +167,14 @@ void set_memory_byte(int index)
 
 // ================================================================================================
 
-void set_register_bit(int row, byte col, boolean value)
+inline void set_register_bit(int row, byte col, boolean value)
 {
     reg_display.setLed(0, 7 - row, col, value);
 }
 
 // ================================================================================================
 
-void display_register(byte index)
+inline void display_register(byte index)
 {
     auto value = registers[index];
     for (auto i = 0; i < 8; ++i, value >>= 1)
