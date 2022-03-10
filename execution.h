@@ -2,34 +2,56 @@
 
 #include "instructions.h"
 
-// ============================================================================
+// =============================================================================
 
-void error();
+function execute(byte op_code)
+{
+    static constexpr func_t functions[] =
+    {
+        _and, _or,  _not, _xor,
+        _add, _sub, _mul, _div,
+        _inc, _dec, _neg, _mod,
+        _psh, _pop, _shl, _shr,
 
-byte push_mem(byte value);
-byte pop_mem();
-byte pop_stack();
+        _mov, _lbl, _nop, _ret,
+        _cmp, _jmp, _je,  _jne,
+        _jl,  _jle, _jg,  _jge,
+        _jc,  _jo,  _js,  _jz
+    };
 
-void print_segment();
-void clear_segment();
+    auto operands = op_code & 7;
+    auto instruction = op_code >> 3;
 
-byte get_key();
-byte get_button();
+    if (instruction > 31) { error(); return; }
+    functions[instruction](operands);
+}
 
-byte wait_button(cref button);
-byte read_value(byte base = 10);
+// =============================================================================
 
-byte get_reg();
-byte get_mem();
+function run_code()
+{
+    error(); error();
+    wait_button(ENTER);
+    clear_segment();
 
-String get_instruction(const char& c);
+    RA = RB = RC = RD = BP = IP = FLAGS = 0;
 
-void set_memory_bit(int row, byte col, boolean value = true);
-void set_memory_byte(int index);
+    for (auto i = 0; i < 8; ++i)
+        display_register(i);
 
-void set_register_bit(int row, byte col, boolean value = true);
-void display_register(byte index);
+    while (true)
+    {
+        auto op_code = pop_mem();
+        execute(op_code);
 
-void run_code();
+        for (auto i = 0; i < 32; ++i)
+            set_memory_byte(i);
 
-// ============================================================================
+        for (auto i = 0; i < 8; ++i)
+            display_register(i);
+
+        wait_button(ENTER);
+    }
+}
+
+// =============================================================================
